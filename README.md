@@ -24,15 +24,19 @@ The reasons for these simplifications are stated in Appendix A.
 
 Considering these variables, we can estimate the proportion of compute that is used in the training of the model at 128K context length. 
 
+
 $$
 \text{Proportion} = \frac{\text{Compute(128K)}}{\text{Compute(8K)} + \text{Compute(128K)}} = \frac{(1 \times 10^{11}) \times 128000^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times 128000^2\Big)} \approx 63.054\% 
 $$
 
+
 This means that around 63% of the compute used in training `Llama-3.1-405B` was used in the training of the model for 128K context length. This is a very rough estimate, but it gives us an idea of the savings that could be achieved by using the Bayesian Attention Mechanism. In this specific case, training the same model would require almost $3\times$ less compute. If we consider context lengths of 1M tokens, the savings are exponentially greater, as the proportion of compute used in training the model at 1M context length would be even lower. As it follows
+
 
 $$
 \text{Proportion} = \frac{\text{Compute(128K)}}{\text{Compute(8K)} + \text{Compute(128K)}} = \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.049\%
 $$
+
 
 in this case, the savings would be around $100\times$ less compute. 
 
