@@ -1,4 +1,18 @@
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
 
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
 
 Last week, I published ["Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"](https://arxiv.org/abs/2505.22842) on arXiv. This paper introduces a novel Bayesian Attention Mechanism that enhances the capabilities of transformer models enabling models to extrapolate context lengths. Outside of the direct contributions of this research, I do believe that it will impact the evaluation of AI related companies.
 ### Resources
