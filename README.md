@@ -1,18 +1,4 @@
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  }
-};
-</script>
 
-<script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
-
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-</script>
 
 Last week, I published ["Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"](https://arxiv.org/abs/2505.22842) on arXiv. This paper introduces a novel Bayesian Attention Mechanism that enhances the capabilities of transformer models enabling models to extrapolate context lengths. Outside of the direct contributions of this research, I do believe that it will impact the evaluation of AI related companies.
 ### Resources
@@ -57,4 +43,4 @@ $$
 in this case, the savings would be around $100\times$ less compute. 
 
 ### Conclusion
-In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Yet, I do not believe that these values will directly translate in savings to training models, as these savings should translate in more compute being used in other areas, such as training larger models. I do believe that these savings will be reflected in the dominance of large companies in the AI space (at least where it )
+In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Yet, I do not believe that these values will directly translate in savings to training models, as these savings should translate in more compute being used in other areas, such as training larger models. I do believe that these savings will be reflected in the dominance of large companies.
