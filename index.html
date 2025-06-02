@@ -66,19 +66,19 @@
 <body>
 
     <div class="container">
-        <h1>Bayesian Attention Mechanism</h1>
+        <h1>Bayesian Attention Mechanism Impact</h1>
 
-        <p>Last week, I published <a href="https://arxiv.org/abs/2505.22842">"Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"</a> on arXiv. This paper introduces a novel Bayesian Attention Mechanism that enhances the capabilities of transformer models enabling models to extrapolate context lengths. Outside of the direct contributions of this research, I do believe that it will impact the evaluation of AI related companies.</p>
+        <p>Last week, I published <a href="https://arxiv.org/abs/2505.22842">"Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"</a> on arXiv. This paper introduces the Bayesian Attention Mechanism Theoretical Framework that enhances the capabilities of transformer models enabling models to extrapolate context lengths. Outside of the direct contributions of this research, I do believe that it will impact the valuation of AI related companies.</p>
 
         <h3>Resources</h3>
         <ul>
           <li><a href="https://arxiv.org/abs/2505.22842">Paper</a></li>
-          <li><a href="https://github.com/ArthurSBianchessi">GitHub</a></li>
+          <li><a href="https://github.com/ArthurSBianchessi/BAM">GitHub</a></li>
         </ul>
 
         <h3>Introduction</h3>
 
-        <p>Current models have scaled a lot due to the increase in capability of investing more computation in model training. However, there a two quadratic costs that are associated in training larger models:</p>
+        <p>Current models have scaled a lot due to the increase in capability of investing more computation in model training. However, there a two quadratic costs that are associated in training transformer models:</p>
         <ol>
           <li>To train a model with twice the number of parameters, you also need twice the amount of data, therefore resulting in a 4x increase in computational cost.
             <ul>
@@ -88,41 +88,77 @@
           <li>The attention mechanism in transformers has a quadratic cost in the sequence length, which means that doubling the sequence length results in a 4x increase in computational cost.</li>
         </ol>
 
-        <p>Altough current model sizes have stagnated, the sequence length has not. Companies such as OpenAI, Google, and Meta have invested extreme resources in increasing the sequence length of their models, resulting in models that can handle millions of tokens. However, in the current literature, there is no way to extrapolate the context length of a model beyond the training data. This means that if a model is trained on 128k tokens, it cannot handle more than 128k tokens at inference time.</p>
+        <p>Altough current model sizes have stagnated, the sequence length has not. Companies such as OpenAI, Google, and Meta have invested a lot of resources in increasing the sequence length of their models, resulting in models that can handle millions of tokens. However, in the current literature, there is no way to extrapolate the context length of a model beyond the training data without any modification to the underlying model<sup>1</sup>. This means that if a model is trained on 128K tokens, it cannot handle more than 128K tokens at inference time.</p>
 
-        <p>In the <a href="https://arxiv.org/abs/2505.22842">paper</a>, we managed to train a small model (~120M) in a sequence length of 512 tokens, and extrapolate the context length of more than 128 000 tokens, beating the context length of models such as <a href="https://arxiv.org/abs/2407.21783">Llama-3</a>. To estimate the saving that would be achieved by using this method, I am going to use the <a href="https://arxiv.org/abs/2407.21783">Llama-3 herd of models</a> as reference.</p>
+        <p>In our <a href="https://arxiv.org/abs/2505.22842">paper</a>, we managed to train a small model (~120M) in a sequence length of 512 tokens, and extrapolate the context length of more than 128K tokens<sup>2</sup>, beating the context length of models such as <a href="https://arxiv.org/abs/2407.21783">Llama-3</a>. To estimate the saving that would be achieved by using this method, I am going to use the <a href="https://arxiv.org/abs/2407.21783">Llama-3 herd of models</a> as reference.</p>
 
         <h3>Estimating Savings</h3>
 
         <p>Llama-3 main model <code>Llama-3.1-405B</code> was trained on around 15 Trillion tokens. These tokens were used in different stages of training, increasing the context length trained on at each stage, the specific scalings used in the training can be found at section 3.4.1 and 3.4.2 of <a href="https://arxiv.org/abs/2407.21783">Llama-3 herd of models</a>. For the sake of simplicity, I am considering:</p>
         <ul>
-          <li>15 Trillion tokens at 8K context length</li>
-          <li>100 Billion tokens at 128K context length</li>
+          <li>15 Trillion tokens at 8K context length<sup>3</sup></li>
+          <li>100 Billion tokens at 128K context length<sup>4</sup></li>
         </ul>
 
-        <p>The reasons for these simplifications are stated in Appendix A.</p>
-
-        <p>Considering these variables, we can estimate the proportion of compute that is used in the training of the model at 128K context length. </p>
+        <p>Considering these variables, we can estimate the proportion of compute that is used in the training of the model at 128K context length following the formula:</p>
 
         <p>
         $$
-        \text{Proportion} = \frac{\text{Compute(128K)}}{\text{Compute(8K)} + \text{Compute(128K)}} = \frac{(1 \times 10^{11}) \times 128000^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times 128000^2\Big)} \approx 63.054\% 
+        \begin{equation}
+        \text{Proportion} = \frac{\text{Compute(Long Context)}}{\text{Compute(8K)} + \text{Compute(Long Context)}}
+        \end{equation}
         $$
         </p>
 
-        <p>This means that around 63% of the compute used in training <code>Llama-3.1-405B</code> was used in the training of the model for 128K context length. This is a very rough estimate, but it gives us an idea of the savings that could be achieved by using the Bayesian Attention Mechanism. In this specific case, training the same model would require almost $3\times$ less compute. If we consider context lengths of 1M tokens, the savings are exponentially greater, as the proportion of compute used in training the model at 1M context length would be even lower. As it follows</p>
+        <p>Where the compute is approximated as the number of tokens multiplied by the square of the context length. This means that we can calculate the proportion of compute used in training the model at 128K context length as follows:</p>
 
         <p>
         $$
-        \text{Proportion} = \frac{\text{Compute(128K)}}{\text{Compute(8K)} + \text{Compute(128K)}} = \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.049\%
+        \frac{(1 \times 10^{11}) \times 128000^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times 128000^2\Big)} \approx 63.054\% 
+        $$
+        </p>
+
+        <p>This means that around 63% of the compute used in training <code>Llama-3.1-405B</code> was used in the training of the model for 128K context length. This is a very rough estimate, but it gives us a lower bound for the savings that could be achieved. In this specific case, training the same model would require almost $3\times$ less compute. If we consider context lengths of 1M tokens, the savings are exponentially greater, as the proportion of compute used in training the model at 1M context length would be even lower. As it follows</p>
+
+        <p>
+        $$
+        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.049\%
         $$
         </p>
 
         <p>in this case, the savings would be around $100\times$ less compute.</p>
 
+
+
         <h3>Conclusion</h3>
-        <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Yet, I do not believe that these values will directly translate in savings to training models, as these savings should translate in more compute being used in other areas, such as training larger models. I do believe that these savings will be reflected in the dominance of large companies.</p>
-    </div>
+        <!-- <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Yet, I do not believe that these values will directly translate in savings to training models, as these savings should translate in more compute being used in other areas, such as training larger models. I do believe that these savings will be reflected in the dominance of large companies.</p> -->
+        <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Although it is expected that these savings will be reinvested in training, such as training larger models, the impact of these savings should reflect in a reduction in investment in accelerating hardware, such as GPUs and TPUs.</p>
+
+
+        <h3>Notes</h3>
+        <p>1. There are some methods that allow for extrapolation of context length, that modify the underlying model, but do not need any additional training.  <a href="https://arxiv.org/abs/2501.19399">Scalable Softmax</a> is the one that has the best performance that I am aware of, being published in January 31st, 2025. It allows for around $8\times$ extrapolation of context length with minimal degradation in performance. <a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/">Llama-4 herd of models</a> are examples of models that use this method to extrapolate context length. Meta in this case seems to have used the method to train models from 128K to 1M tokens (10M in the case of Llama 4 Scout).</p>
+        <p>2. We did train models with larger context lengths, the model trained on sequence length of 2048 managed to get 4 out of 4 predictions correct in the passkey retrieval of 1 Million tokens (due to the computational and time cost of getting the data for 10 samples and other experiments between 500K and 1M tokens, it was not added to the paper). Initial testing of larger models ($~500M$ parameters) also show that these models can continue to extrapolate more than 2 orders of magnitude in context length($>100\times$). </p>
+        <p>3. It was used less than 15 Trillion tokens in this context length, but I rounded it up to 15 Trillion so it would underestimate the savings.</p>
+        <p>4. 100B tokens trained in 128K context length is also an underestimation. Considering a sequence length that is exponentially increased at each batch (most samples are trained in lower sequence lengths), the equivalent sequence length trained on 100B tokens is around 153K tokens of sequence length. This value was calculated using the following python code:
+        </p>
+
+        <!-- <pre><sample class="pythonHigh"> -->
+        <textarea cols="100" rows="15" readonly>
+        import torch
+        import math
+
+        total_number_of_tokens = 800_000_000_000
+        tokens_per_batch = 16_000_000
+        number_of_batches = total_number_of_tokens // tokens_per_batch
+        sequence_length_per_batch = torch.logspace(math.log(128_000), math.log(8_000), 
+                                                number_of_batches, base=math.e, 
+                                                dtype=torch.float64)
+        cost_per_batch = tokens_per_batch * (sequence_length_per_batch**2)
+        total_cost = cost_per_batch.sum()
+        hundred_billion_sequence_length_equivalent = (total_cost / 100_000_000_000)**0.5
+        print("100B sequence length equivalent: ", end="\t")
+        print(f"{hundred_billion_sequence_length_equivalent:,.2f} tokens")
+    </textarea>
 
 </body>
 </html>
