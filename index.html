@@ -131,7 +131,6 @@
 
 
         <h3>Conclusion</h3>
-        <!-- <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Yet, I do not believe that these values will directly translate in savings to training models, as these savings should translate in more compute being used in other areas, such as training larger models. I do believe that these savings will be reflected in the dominance of large companies.</p> -->
         <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Although it is expected that these savings will be reinvested in training, such as training larger models, the impact of these savings should reflect in a reduction in investment in accelerating hardware, such as GPUs and TPUs.</p>
 
 
@@ -158,7 +157,14 @@
         hundred_billion_sequence_length_equivalent = (total_cost / 100_000_000_000)**0.5
         print("100B sequence length equivalent: ", end="\t")
         print(f"{hundred_billion_sequence_length_equivalent:,.2f} tokens")
-    </textarea>
+        </textarea>
+
+
+        <h3>Disclaimer</h3>
+        <p>This post is not financial advice. I am not a financial advisor.</p>
+        <p>I do have a financial interests with this post, specifically, I am going to bet against NVIDIA.</p>
+        <p>As I am not an established researcher, I do strongly recommend to not only read the paper, but also run and verify the code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a>. I do not have any financial interest in the GitHub repository, but I do believe that it is important to verify the results of the paper.</p>
+        
 
 </body>
 </html>
