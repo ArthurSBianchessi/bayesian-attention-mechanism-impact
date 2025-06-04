@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayesian Attention Mechanism: A Probabilistic Framework</title>
+    <title>Bayesian Attention Mechanism Impact</title>
 
     <script>
       MathJax = {
@@ -30,7 +30,7 @@
             margin: 0 auto;
             padding: 1em;
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 40px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         h1, h2, h3 {
@@ -71,7 +71,7 @@
             margin-bottom: -40px;
             border-style: solid;
             border-width: 50px;
-            border-radius: 70px;
+            border-radius: 80px;
             /* border-top-width: 10px; */
             border-color: white;
         }
@@ -83,7 +83,8 @@
     <div class="container">
         <h1>Bayesian Attention Mechanism Impact</h1>
 
-        <p>Last week, I published <a href="https://arxiv.org/abs/2505.22842">"Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"</a> on arXiv. This paper introduces the Bayesian Attention Mechanism Theoretical Framework that enhances the capabilities of transformer models enabling models to extrapolate context lengths. Outside of the direct contributions of this research, I do believe that it will impact the valuation of AI related companies.</p>
+        <p>Last week, I published <a href="https://arxiv.org/abs/2505.22842">"Bayesian Attention Mechanism: A Probabilistic Framework for Positional Encoding and Context Length Extrapolation"</a> on arXiv. The paper introduces the Bayesian Attention Mechanism Theoretical Framework that enhances the capabilities of transformer models enabling models to extrapolate context lengths. This article discusses the potential impact of this framework on the future of large language models, particularly in terms of compute savings and the implications for hardware investments.</p>
+        </p>
 
         <h3>Resources</h3>
         <ul>
@@ -109,7 +110,7 @@
 
         <h3>Estimating Savings</h3>
 
-        <p>Llama-3 main model <code>Llama-3.1-405B</code> was trained on around 15 Trillion tokens. These tokens were used in different stages of training, increasing the context length trained on at each stage, the specific scalings used in the training can be found at section 3.4.1 and 3.4.2 of <a href="https://arxiv.org/abs/2407.21783">Llama-3 herd of models</a>. For the sake of simplicity, I am considering:</p>
+        <p>Llama-3 main model <code>Llama-3.1-405B</code> was trained on around 15 Trillion tokens. These tokens were used in different stages of training, increasing the context length trained on at each stage, the specific scalings used in the training can be found at section 3.4 of <a href="https://arxiv.org/abs/2407.21783">Llama-3 herd of models</a>. For the sake of simplicity, I am considering:</p>
         <ul>
           <li>15 Trillion tokens at 8K context length<sup>3</sup></li>
           <li>100 Billion tokens at 128K context length<sup>4</sup></li>
@@ -119,9 +120,7 @@
 
         <p>
         $$
-        \begin{equation}
         \text{Proportion} = \frac{\text{Compute(Long Context)}}{\text{Compute(8K)} + \text{Compute(Long Context)}}
-        \end{equation}
         $$
         </p>
 
@@ -141,8 +140,16 @@
         $$
         </p>
 
-        <p>in this case, the savings would be around $100\times$ less compute.</p>
+        <p>in this case, the savings would be around $100\times$ less compute. Even though the neighter the number of tokens nor the context length were aproximated, this estimate is still an underestimation. This is due to the extrapolation of context length, which allows for an increase of $500\times$ context at $\text{~100%}$ accuracy in passkey retrieval. Considering this setup:
+        </p>
 
+        <p>
+        $$
+        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 2000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.94\%
+        $$
+        </p>
+
+        <p>In this case, the savings would be around $1600\times$ less compute, which is an absurd reduction in compute and training cost.
 
 
         <h3>Conclusion</h3>
@@ -153,45 +160,30 @@
         <p>1. There are some methods that allow for extrapolation of context length, that modify the underlying model, but do not need any additional training.  <a href="https://arxiv.org/abs/2501.19399">Scalable Softmax</a> is the one that has the best performance that I am aware of, being published in January 31st, 2025. It allows for around $8\times$ extrapolation of context length with minimal degradation in performance. <a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/">Llama-4 herd of models</a> are examples of models that use this method to extrapolate context length. Meta in this case seems to have used the method to train models from 128K to 1M tokens (10M in the case of Llama 4 Scout).</p>
         <p>2. We did train models with larger context lengths, the model trained on sequence length of 2048 managed to get 100% accuracy in the passkey retrieval (10 samples) of 1 Million tokens (this test was done after publishing the paper). Initial testing of larger models ($\text{~500M}$ parameters) also show that these models can continue to extrapolate more than 2 orders of magnitude in context length($>100\times$). </p>
         <p>3. It was used less than 15 Trillion tokens in this context length, but I rounded it up to 15 Trillion so it would underestimate the savings.</p>
-        <p>4. 100B tokens trained in 128K context length is also an underestimation. Considering a sequence length that is exponentially increased at each batch (most samples are trained in lower sequence lengths), the equivalent sequence length trained on 100B tokens is around 153K tokens of sequence length. This value was calculated using the following python code:
+        <!-- <p>4. 100B tokens trained in 128K context length is also an underestimation. Considering a sequence length that is exponentially increased at each batch (most samples are trained in lower sequence lengths), the equivalent sequence length trained on 100B tokens is around 153K tokens of sequence length. This value was calculated using the following python code: </p> -->
+         <!-- Justify setting max sequence length at 100 Billion tokens, it also should be an underestimation -->
+        <p>4. Acording to the <a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/">report</a>, Meta used 800B tokens divided in 6 stages for long context pre-training. Due to this, I believe that the 100B tokens trained in 128K context length is a good approximation, also being an underestimation. This also is corraborated by aproximating the sequence length trained on 100B tokens through exponentially increasing sequence lengths at each batch. The equivalent sequence length trained on 100B tokens is around 153K tokens of sequence length. This value was calculated using the following python code:</p>
+
         </p>
 
-
     <pre class="python">
-    <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">torch</span> 
-    <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">math</span> 
+    <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">torch</span>
+    <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">math</span>
+
+    <span style="color: #9bcadc">initial_sequence_length</span>     = <span style="color: #abc2a2">8_000</span>
+    <span style="color: #9bcadc">final_sequence_length</span>       = <span style="color: #abc2a2">128_000</span>
     <span style="color: #9bcadc">total_number_of_tokens</span>      = <span style="color: #abc2a2">800_000_000_000</span>
     <span style="color: #9bcadc">tokens_per_batch</span>            = <span style="color: #abc2a2">16_000_000</span>
     <span style="color: #9bcadc">number_of_batches</span>           = <span style="color: #9bcadc">total_number_of_tokens</span> // <span style="color: #9bcadc">tokens_per_batch</span>
-    <span style="color: #9bcadc">sequence_length_per_batch</span>   = <span style="color: #4dc9b0">torch</span><span style="color: #d3d3a3">.logspace</span><span style="color: #fdd402">(</span><span style="color: #4dc9b0">math</span>.<span style="color: #d3d3a3">log</span><span style="color: #fdd402">(</span><span style="color: #abc2a2">128_000</span><span style="color: #fdd402">)</span>, <span style="color: #4dc9b0">math</span>.<span style="color: #d3d3a3">log</span><span style="color: #fdd402">(</span><span style="color: #abc2a2">8_000</span><span style="color: #fdd402">)</span>, 
-                                                    <span style="color: #9bcadc">number_of_batches</span>, <span style="color: #9bcadc">base</span>=<span style="color: #4dc9b0">math</span>.<span style="color: #9bcadc">e</span>, 
-                                                    <span style="color: #9bcadc">dtype</span>=<span style="color: #4dc9b0">torch</span>.<span style="color: #9bcadc">float64</span><span style="color: #fdd402">)</span>
+    <span style="color: #9bcadc">sequence_length_per_batch</span>   = <span style="color: #4dc9b0">torch</span><span style="color: #d3d3a3">.logspace</span><span style="color: #fdd402">(</span><span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">final_sequence_length</span><span style="color: #fdd402">)</span>, 
+                                                 <span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">initial_sequence_length</span><span style="color: #fdd402">)</span>, 
+                                                 <span style="color: #9bcadc">number_of_batches</span>, <span style="color: #9bcadc">base</span>=<span style="color: #4dc9b0">math</span>.<span style="color: #9bcadc">e</span>, 
+                                                 <span style="color: #9bcadc">dtype</span>=<span style="color: #4dc9b0">torch</span>.<span style="color: #9bcadc">float64</span><span style="color: #fdd402">)</span>
     <span style="color: #9bcadc">cost_per_batch</span>              = <span style="color: #9bcadc">tokens_per_batch</span> * <span style="color: #fdd402">(</span><span style="color: #9bcadc">sequence_length_per_batch</span>**<span style="color: #abc2a2">2</span><span style="color: #fdd402">)</span>
-    <span style="color: #9bcadc">total_cost</span>                  = <span style="color: #9bcadc">cost_per_batch</span><span style="color: #d3d3a3">.sum</span><span style="color: #fdd402">(</span><span style="color: #fdd402">)</span>
-
-    <span style="color: #9bcadc">hundred_billion_sequence_length_equivalent</span> = <span style="color: #fdd402">(</span><span style="color: #9bcadc">total_cost</span> / <span style="color: #abc2a2">100_000_000_000</span><span style="color: #fdd402">)</span>**<span style="color: #abc2a2">0.5</span>
-    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #cb8f76">"100B sequence length equivalent: "</span>, <span style="color: #9bcadc">end</span>=</span><span style="color: #cb8f76">"\t"</span><span style="color: #fdd402">)</span>
-    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #569cd6">f</span><span style="color: #cb8f76">"</span><span style="color: #da70d6">{</span><span style="color: #9bcadc">hundred_billion_sequence_length_equivalent</span><span style="color: #569cd6">:,.2f</span><span style="color: #da70d6">}</span><span style="color: #cb8f76"> tokens"</span><span style="color: #fdd402">)</span></pre>
-
-
-        <!-- <pre class="python">
-        import torch 
-        import math 
-        total_number_of_tokens      = 800_000_000_000
-        tokens_per_batch            = 16_000_000
-        number_of_batches           = total_number_of_tokens // tokens_per_batch
-        sequence_length_per_batch   = torch.logspace(math.log(128_000), math.log(8_000), 
-                                                     number_of_batches, base=math.e, 
-                                                     dtype=torch.float64)
-        cost_per_batch              = tokens_per_batch * (sequence_length_per_batch**2)
-        total_cost                  = cost_per_batch.sum()
-
-        hundred_billion_sequence_length_equivalent = (total_cost / 100_000_000_000)**0.5
-        print("100B sequence length equivalent: ", end="\t")
-        print(f"{hundred_billion_sequence_length_equivalent:,.2f} tokens")
-        </pre> -->
-         
-         
+    <span style="color: #9bcadc">total_cost</span>                  = <span style="color: #9bcadc">cost_per_batch</span><span style="color: #d3d3a3">.sum</span><span style="color: #fdd402">()</span>
+    <span style="color: #9bcadc">equivalent_seq_len</span>          = <span style="color: #fdd402">(</span><span style="color: #9bcadc">total_cost</span> / <span style="color: #abc2a2">100_000_000_000</span><span style="color: #fdd402">)</span>**<span style="color: #abc2a2">0.5</span>
+    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #cb8f76">"100B sequence length equivalent: "</span>, <span style="color: #9bcadc">end</span>=<span style="color: #cb8f76">"</span><span style="color: #cb8f76">\t</span><span style="color: #cb8f76">"</span><span style="color: #fdd402">)</span>
+    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #569cd6">f</span><span style="color: #cb8f76">"</span><span style="color: #da70d6">{</span><span style="color: #9bcadc">equivalent_seq_len</span><span style="color: #569cd6">:,.2f</span><span style="color: #da70d6">}</span><span style="color: #cb8f76"> tokens"</span><span style="color: #fdd402">)</span></pre>
 
 
 
@@ -199,7 +191,7 @@
         <p>This post is not financial advice. I am not a financial advisor.</p>
 
         <p>I do have a financial interests with this post, specifically, I plan to bet against NVIDIA.</p>
-        <p>As I am not an established researcher, I do strongly recommend to not only read the paper, but also run and verify the code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a>. I do not have any financial interest in the GitHub repository, but I do believe that it is important to independently verify the results of the paper. To train a small model takes less than a day using 8 instances of NVIDIA A100 40GB, and the code is designed to be easy to run. 
+        <p>As I am not an established researcher, I do strongly recommend to not only read the paper, but also run and verify the code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a>. I do believe that it is important to independently verify the results of the paper. To train a small model takes less than a day using 8 instances of NVIDIA A100 40GB, and the code is designed to be easy to run. 
         </p>
         
 
