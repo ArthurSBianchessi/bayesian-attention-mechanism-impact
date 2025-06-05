@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayesian Attention Mechanism Impact</title>
+    <title>Impact of Bayesian Attention Mechanism</title>
 
     <script>
       MathJax = {
@@ -186,15 +186,15 @@
     <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #569cd6">f</span><span style="color: #cb8f76">"</span><span style="color: #da70d6">{</span><span style="color: #9bcadc">equivalent_seq_len</span><span style="color: #569cd6">:,.2f</span><span style="color: #da70d6">}</span><span style="color: #cb8f76"> tokens"</span><span style="color: #fdd402">)</span>
 </pre>
 
-        <p> Although the above code does not maintain $\text{equivalent_seq_len} > \text{final_sequence_length}$ for $\text{final_sequence_length} = 1 000 000$, it retains this characteristic if the number of tokens is scaled by $\frac{\log{(\frac{\text{new large context}}{8\ 000})}}{\log(\frac{128\ 000}{8\ 000})}$. This should be done for the increase in context length at each step to be the same as the increase in context length at the 128K context length. The intuition behind this is that it should take more steps to scale a model to 1M tokens than it takes to scale it to 128K tokens. Due to this, I will continue to use the 100B tokens trained in the final sequence length for other calculations.</p>
+        <p> Although the above code does not maintain $\text{equivalent_seq_len} > \text{final_sequence_length}$ for $\text{final_sequence_length} = 1 000 000$, it retains this characteristic if the number of tokens is scaled by $\frac{\log{(\frac{\text{new large context}}{8\ 000})}}{\log(\frac{128\ 000}{8\ 000})}$. This should be done for the proportional increase in context length at each step to be the same as it is when training for 128K context length. The intuition behind this is that it should take more steps to scale a model to 1M tokens than it takes to scale it to 128K tokens. Due to this, I used the 100B tokens trained in the final sequence length rule of thumb for other calculations.</p>
 
 
         <h3>Disclaimer</h3>
         <p>This post is not financial advice. I am not a financial advisor.</p>
 
-        <p>I do have a financial interests with this post.</p>
-        <p>As I am not an established researcher, I do strongly recommend to not only read the paper, but also run and verify the code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a>. I do believe that it is important to independently verify the results of the paper. To train a small model takes less than a day using 8 instances of NVIDIA A100 40GB, and the code is designed to be easy to run. 
-        </p>
+        <p>Although the main reason for this post is to publicize the technology, I do have a financial interests with this post.</p>
+
+        <p>Due to all the reasons above and that I am not an established researcher, I do <strong>strongly recommend to independently verify</strong> the results of the paper. I do believe that this paper will have significant impact in the stock market, but again, these results should be <strong>verified</strong>. The code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a> is designed to be easy to run, and to reproduce the results of the paper should take less than a day using 8 instances of NVIDIA A100 40GB (The code should also be checked, anyone can print 100% accuracy)</p>
         
 
 </body>
