@@ -21,7 +21,9 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             line-height: 1.6;
             /* color: #333; */
-            background-color: #181818;
+            /* background-color: #181818; */
+            background-image: url('image.png');
+
             margin: 0;
             padding: 20px;
         }
@@ -128,7 +130,7 @@
 
         <p>
         $$
-        \frac{(1 \times 10^{11}) \times 128000^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times 128000^2\Big)} \approx 63.054\% 
+        \frac{(1 \times 10^{11}) \times 128\ 000^2}{\Big((15 \times 10^{12}) \times 8\ 000^2\Big) + \Big((1 \times 10^{11}) \times 128\ 000^2\Big)} \approx 63.054\% 
         $$
         </p>
 
@@ -136,7 +138,7 @@
 
         <p>
         $$
-        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 8000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.049\%
+        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 8\ 000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.049\%
         $$
         </p>
 
@@ -145,7 +147,7 @@
 
         <p>
         $$
-        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 2000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.94\%
+        \frac{(1 \times 10^{11}) \times (10^6)^2}{\Big((15 \times 10^{12}) \times 2\ 000^2\Big) + \Big((1 \times 10^{11}) \times (10^6)^2\Big)} \approx 99.94\%
         $$
         </p>
 
@@ -153,7 +155,7 @@
 
 
         <h3>Conclusion</h3>
-        <p>In conclusion, I do believe that the Bayesian Attention Mechanism will result in a significant reduction in the compute required to train models with large context lengths. Although it is expected that these savings will be reinvested in training, such as training larger models, the impact of these savings should reflect in a reduction in investment in accelerating hardware, such as GPUs and TPUs.</p>
+         <p>As shown, Bayesian Attention Mechanism allows for a significant reduction in the compute required to train models with large context lengths. Although the estimates done in this post are meant to be a lower bound, they shouldn't reflect the actual savings that can be achieved. This is due to the fact that companies such as Meta and OpenAI have invested a lot of resources in increasing their compute capabilities, and, as such, they are likely to continue to invest such savings in other improvements, such as training larger models. In other words, if the results of Bayesian Attention Mechanism are demonstrated to be consistent, this should result in a significant reduction in the cost of training models as well as an increse in the model capabilities.</p>
 
 
         <h3>Notes</h3>
@@ -164,33 +166,33 @@
          <!-- Justify setting max sequence length at 100 Billion tokens, it also should be an underestimation -->
         <p>4. Acording to the <a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/">report</a>, Meta used 800B tokens divided in 6 stages for long context pre-training. Due to this, I believe that the 100B tokens trained in 128K context length is a good approximation, also being an underestimation. This also is corraborated by aproximating the sequence length trained on 100B tokens through exponentially increasing sequence lengths at each batch. The equivalent sequence length trained on 100B tokens is around 153K tokens of sequence length. This value was calculated using the following python code:</p>
 
-        </p>
-
-    <pre class="python">
+<pre class="python">
     <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">torch</span>
     <span style="color: #9a6a96">import</span> <span style="color: #4dc9b0">math</span>
 
-    <span style="color: #9bcadc">initial_sequence_length</span>     = <span style="color: #abc2a2">8_000</span>
-    <span style="color: #9bcadc">final_sequence_length</span>       = <span style="color: #abc2a2">128_000</span>
-    <span style="color: #9bcadc">total_number_of_tokens</span>      = <span style="color: #abc2a2">800_000_000_000</span>
-    <span style="color: #9bcadc">tokens_per_batch</span>            = <span style="color: #abc2a2">16_000_000</span>
-    <span style="color: #9bcadc">number_of_batches</span>           = <span style="color: #9bcadc">total_number_of_tokens</span> // <span style="color: #9bcadc">tokens_per_batch</span>
-    <span style="color: #9bcadc">sequence_length_per_batch</span>   = <span style="color: #4dc9b0">torch</span><span style="color: #d3d3a3">.logspace</span><span style="color: #fdd402">(</span><span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">final_sequence_length</span><span style="color: #fdd402">)</span>, 
-                                                 <span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">initial_sequence_length</span><span style="color: #fdd402">)</span>, 
-                                                 <span style="color: #9bcadc">number_of_batches</span>, <span style="color: #9bcadc">base</span>=<span style="color: #4dc9b0">math</span>.<span style="color: #9bcadc">e</span>, 
-                                                 <span style="color: #9bcadc">dtype</span>=<span style="color: #4dc9b0">torch</span>.<span style="color: #9bcadc">float64</span><span style="color: #fdd402">)</span>
-    <span style="color: #9bcadc">cost_per_batch</span>              = <span style="color: #9bcadc">tokens_per_batch</span> * <span style="color: #fdd402">(</span><span style="color: #9bcadc">sequence_length_per_batch</span>**<span style="color: #abc2a2">2</span><span style="color: #fdd402">)</span>
-    <span style="color: #9bcadc">total_cost</span>                  = <span style="color: #9bcadc">cost_per_batch</span><span style="color: #d3d3a3">.sum</span><span style="color: #fdd402">()</span>
-    <span style="color: #9bcadc">equivalent_seq_len</span>          = <span style="color: #fdd402">(</span><span style="color: #9bcadc">total_cost</span> / <span style="color: #abc2a2">100_000_000_000</span><span style="color: #fdd402">)</span>**<span style="color: #abc2a2">0.5</span>
+    <span style="color: #9bcadc">initial_sequence_length</span>      = <span style="color: #abc2a2">8_000</span>
+    <span style="color: #9bcadc">final_sequence_length</span>        = <span style="color: #abc2a2">128_000</span>
+    <span style="color: #9bcadc">total_number_of_tokens</span>       = <span style="color: #abc2a2">800_000_000_000</span>
+    <span style="color: #9bcadc">tokens_per_batch</span>             = <span style="color: #abc2a2">16_000_000</span> 
+    <span style="color: #9bcadc">number_of_batches</span>            = <span style="color: #9bcadc">total_number_of_tokens</span> // <span style="color: #9bcadc">tokens_per_batch</span> 
+    <span style="color: #9bcadc">sequence_length_per_batch</span>    = <span style="color: #4dc9b0">torch</span><span style="color: #d3d3a3">.logspace</span><span style="color: #fdd402">(</span><span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">final_sequence_length</span><span style="color: #fdd402">)</span>, 
+                                                  <span style="color: #4dc9b0">math</span><span style="color: #d3d3a3">.log</span><span style="color: #fdd402">(</span><span style="color: #9bcadc">initial_sequence_length</span><span style="color: #fdd402">)</span>, 
+                                                  <span style="color: #9bcadc">number_of_batches</span>+<span style="color: #abc2a2">1</span>, <span style="color: #9bcadc">base</span>=<span style="color: #4dc9b0">math</span>.<span style="color: #9bcadc">e</span>, 
+                                                  <span style="color: #9bcadc">dtype</span>=<span style="color: #4dc9b0">torch</span>.<span style="color: #9bcadc">float64</span><span style="color: #fdd402">)</span><span style="color: #fdd402">[</span>:-<span style="color: #abc2a2">1</span><span style="color: #fdd402">]</span>
+    <span style="color: #9bcadc">cost_per_batch</span>               = <span style="color: #9bcadc">tokens_per_batch</span> * <span style="color: #fdd402">(</span><span style="color: #9bcadc">sequence_length_per_batch</span>**<span style="color: #abc2a2">2</span><span style="color: #fdd402">)</span>
+    <span style="color: #9bcadc">total_cost</span>                   = <span style="color: #9bcadc">cost_per_batch</span><span style="color: #d3d3a3">.sum</span><span style="color: #fdd402">()</span>
+    <span style="color: #9bcadc">equivalent_seq_len</span>           = <span style="color: #fdd402">(</span><span style="color: #9bcadc">total_cost</span> / <span style="color: #abc2a2">100_000_000_000</span><span style="color: #fdd402">)</span>**<span style="color: #abc2a2">0.5</span>
     <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #cb8f76">"100B sequence length equivalent: "</span>, <span style="color: #9bcadc">end</span>=<span style="color: #cb8f76">"</span><span style="color: #cb8f76">\t</span><span style="color: #cb8f76">"</span><span style="color: #fdd402">)</span>
-    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #569cd6">f</span><span style="color: #cb8f76">"</span><span style="color: #da70d6">{</span><span style="color: #9bcadc">equivalent_seq_len</span><span style="color: #569cd6">:,.2f</span><span style="color: #da70d6">}</span><span style="color: #cb8f76"> tokens"</span><span style="color: #fdd402">)</span></pre>
+    <span style="color: #d3d3a3">print</span><span style="color: #fdd402">(</span><span style="color: #569cd6">f</span><span style="color: #cb8f76">"</span><span style="color: #da70d6">{</span><span style="color: #9bcadc">equivalent_seq_len</span><span style="color: #569cd6">:,.2f</span><span style="color: #da70d6">}</span><span style="color: #cb8f76"> tokens"</span><span style="color: #fdd402">)</span>
+</pre>
 
+        <p> Although the above code does not maintain $\text{equivalent_seq_len} > \text{final_sequence_length}$ for $\text{final_sequence_length} = 1 000 000$, it retains this characteristic if the number of tokens is scaled by $\frac{\log{(\frac{\text{new large context}}{8\ 000})}}{\log(\frac{128\ 000}{8\ 000})}$. This should be done for the increase in context length at each step to be the same as the increase in context length at the 128K context length. The intuition behind this is that it should take more steps to scale a model to 1M tokens than it takes to scale it to 128K tokens. Due to this, I will continue to use the 100B tokens trained in the final sequence length for other calculations.</p>
 
 
         <h3>Disclaimer</h3>
         <p>This post is not financial advice. I am not a financial advisor.</p>
 
-        <p>I do have a financial interests with this post, specifically, I plan to bet against NVIDIA.</p>
+        <p>I do have a financial interests with this post.</p>
         <p>As I am not an established researcher, I do strongly recommend to not only read the paper, but also run and verify the code in the <a href="https://arxiv.org/abs/2505.22842">GitHub repository</a>. I do believe that it is important to independently verify the results of the paper. To train a small model takes less than a day using 8 instances of NVIDIA A100 40GB, and the code is designed to be easy to run. 
         </p>
         
